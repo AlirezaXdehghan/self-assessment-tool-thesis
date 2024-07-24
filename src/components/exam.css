@@ -1,0 +1,55 @@
+.exam-container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 700px;
+    margin: 0 auto;
+}
+
+.video-container {
+    width: 320px;  /* Set the desired width */
+    height: 240px; /* Set the desired height */
+    border: 5px solid #ddd;
+    border-radius: 5px;
+    border-color: darkolivegreen;
+    margin-bottom: 20%;
+    overflow: hidden;  /* Ensure content does not overflow */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.video-container video {
+    width: 100%;  /* Ensure the video fits within the container */
+    height: auto; /* Maintain aspect ratio */
+}
+
+.controls {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.controls button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    background-color: #48AD8F;
+    color: white;
+    font-size: 16px;
+}
+
+.controls button:hover {
+    background-color: #FF4444;
+}
+
+.question-area {
+    text-align: left;
+    margin-bottom: 10%;
+}
+
+.question-area h2 {
+    margin-bottom: 10px;
+}

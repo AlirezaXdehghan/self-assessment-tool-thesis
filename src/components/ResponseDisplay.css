@@ -1,0 +1,56 @@
+.preview {
+    padding: 20px;
+}
+
+.nextprev {}
+
+.preview h1 {
+    font-size: 28px;
+    margin-bottom: 10px;
+}
+
+.preview p {
+    margin-bottom: 20px;
+}
+
+.pdf-preview {
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 10px;
+    display: inline-block;
+    text-align: center;
+}
+
+.navigation {
+    align-items: center;
+    flex-direction: row;
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: space-around;
+}
+
+.navigation button,
+.navigation select,
+.navigation input {
+    background-color: #48AD8F;
+}
+
+.createexam {
+    flex-direction: row;
+    display: flex;
+    justify-content: center;
+}
+
+.next-button {
+    margin-top: 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.next-button:hover {
+    background-color: #0056b3;
+}

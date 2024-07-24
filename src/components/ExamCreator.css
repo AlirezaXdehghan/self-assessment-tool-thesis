@@ -1,0 +1,41 @@
+.exam-creator {
+    padding: 30px;
+    border-radius: 10px;
+    display: inline-block;
+}
+
+.exam-creator h2 {
+    text-align: left;
+}
+
+.exam-creator p{
+    padding-bottom: 100px;
+}
+
+.exam-creator form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border-radius: 30px;
+}
+
+.exam-creator input[type="file"] {
+    margin-bottom: 20px;
+}
+
+.exam-creator button {
+    background-color: #55AACE;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 30px;
+    cursor: pointer;
+}
+
+.exam-creator button:hover {
+    background-color: #0056b3;
+}
+
+.loading-gif {
+    width: 50px;
+}
