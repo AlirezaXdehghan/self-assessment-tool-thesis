@@ -21,7 +21,12 @@ const Exam = () => {
 
     const fetchQuestion = async (index) => {
         try {
-            const response = await axios.get(`${serverAddress}/showquestion/${idid}/${index}`);
+            const response = await axios.get(`${serverAddress}/showquestion/${idid}/${index}`, {
+    headers: {
+        'ngrok-skip-browser-warning': 'true'
+    }
+});
+
             const question = response.data.question;
             setCurrentQuestion(question);
         } catch (error) {
