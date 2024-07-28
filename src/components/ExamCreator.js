@@ -33,6 +33,9 @@ const ExamCreator = () => {
             const response = await fetch(`${serverAddress}/uploadPDF`, {
                 method: 'POST',
                 body: formData,
+                headers: {
+                    'ngrok-skip-browser-warning': 'true'
+                }
             });
 
             const result = await response.json();
