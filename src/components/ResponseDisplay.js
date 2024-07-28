@@ -66,10 +66,12 @@ function ResponseDisplay({ st, sp, textSize, nc}) {
             formData.append('validSections', JSON.stringify(pageList));
 
             await axios.post(`${serverAddress}/createtheexam/${idid}`, formData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data'
-                }
-            });
+    headers: {
+        'Content-Type': 'multipart/form-data',
+        'ngrok-skip-browser-warning': 'true'
+    }
+});
+
             dispatch({ type: 'UPDATE_GLOBAL_VIEW', payload: 'exam' });
             // Handle success if needed
         } catch (error) {
