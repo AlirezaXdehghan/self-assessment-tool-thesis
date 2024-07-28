@@ -34,7 +34,7 @@ const ExamCreator = () => {
                 method: 'POST',
                 body: formData,
                 headers: {
-                    'ngrok-skip-browser-warning': 'true'
+                    'ngrok-skip-browser-warning': '60241'
                 }
             });
 
