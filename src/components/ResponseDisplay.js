@@ -18,9 +18,12 @@ function ResponseDisplay({ st, sp, textSize, nc}) {
         setError(null);
 
         try {
-            const response = await fetch(`${serverAddress}/showSection/${idid}/${id}`,{
+            const response = await fetch(`${serverAddress}/showSection/${idid}/${id}`, {
+    headers: {
+        'ngrok-skip-browser-warning': 'true'
+    }
+});
 
-            });
             if (!response.ok) {
                 throw new Error(`Error fetching section ${id}: ${response.statusText}`);
             }
