@@ -4,6 +4,7 @@ import axios from 'axios';
 import './exam.css'
 import { useSelector } from 'react-redux';
 const Exam = () => {
+    let sendAnswerButtonText = "Send Answers!";
     const idid = useSelector(state => state.generatedUuid);
     const serverAddress = useSelector(state => state.backendServer)
     const emailRecipient = useSelector(state => state.emailAddress)
@@ -90,6 +91,7 @@ const Exam = () => {
     };
 
     const handleFinish = () => {
+        sendAnswerButtonText = "Sending..."
         const formData = new FormData();
         formData.append('video', recordedBlob);
         formData.append('timestamps', JSON.stringify(timestamps));
@@ -101,6 +103,7 @@ const Exam = () => {
         })
             .then(response => {
                 alert('Video and timestamps submitted successfully!');
+                sendAnswerButtonText = "Sent!"
             })
             .catch(error => {
                 console.error('Error submitting video:', error);
@@ -130,7 +133,7 @@ const Exam = () => {
                 )
             ) : (
                 <div className="controls">
-                    <button onClick={handleFinish}>Send Answers!</button>
+                    <button onClick={handleFinish}>{sendAnswerButtonText}</button>
                 </div>
             )}
         </div>
