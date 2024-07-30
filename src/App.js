@@ -9,6 +9,7 @@ function App() {
     const view = useSelector(state => state.globalView);
     const dispatch = useDispatch();
     const serverAddress = useSelector(state => state.backendServer)
+    const emailRecipient = useSelector(state => state.emailAddress)
     return (
         <div className="app">
             <aside className="sidebar">
@@ -21,6 +22,11 @@ function App() {
                     type="text"
                     value={serverAddress}
                     onChange={(e) => dispatch({type: 'UPDATE_BACKEND_ADDRESS', payload:e.target.value})}
+                />
+                <input
+                    type="text"
+                    value={emailRecipient}
+                    onChange={(e) => dispatch({type: 'UPDATE_EMAIL_ADDRESS', payload:e.target.value})}
                 />
             </aside>
             <main className="main-content">

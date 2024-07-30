@@ -35,6 +35,7 @@ const Exam = () => {
     };
 
     const handleStartCaptureClick = () => {
+        setCurrentQuestionIndex(0)
         setCapturing(true);
         setStartTimestamp(new Date().getTime());
 

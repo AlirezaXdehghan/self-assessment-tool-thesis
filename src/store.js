@@ -6,7 +6,8 @@ const initialState = {
     globalParameter: "initial_value",
     generatedUuid: "default-uuid",
     globalView: "creator",
-    backendServer: "https://loop.ai"
+    backendServer: "https://loop.ai",
+    emailAddress: "alireza@loop.ai"
 };
 
 // Reducer function
@@ -26,6 +27,11 @@ const rootReducer = (state = initialState, action) => {
             return {
                 ...state,
                 backendServer: action.payload,
+            };
+        case 'UPDATE_EMAIL_ADDRESS':
+            return {
+                ...state,
+                emailAddress: action.payload,
             };
         case 'UPDATE_GENERATED_UUID':
             return {
