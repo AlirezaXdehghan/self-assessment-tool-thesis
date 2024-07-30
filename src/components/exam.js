@@ -11,7 +11,7 @@ const Exam = () => {
     const [capturing, setCapturing] = useState(false);
     const [recordedBlob, setRecordedBlob] = useState(null);
     const [currentQuestion, setCurrentQuestion] = useState(null);
-    const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+    const [currentQuestionIndex, setCurrentQuestionIndex] = useState(-1);
     const [timestamps, setTimestamps] = useState([]);
     const [startTimestamp, setStartTimestamp] = useState(null);
 
