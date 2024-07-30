@@ -6,6 +6,7 @@ import { useSelector } from 'react-redux';
 const Exam = () => {
     const idid = useSelector(state => state.generatedUuid);
     const serverAddress = useSelector(state => state.backendServer)
+    const emailRecipient = useSelector(state => state.emailAddress)
     const webcamRef = useRef(null);
     const mediaRecorderRef = useRef(null);
     const [capturing, setCapturing] = useState(false);
@@ -92,6 +93,7 @@ const Exam = () => {
         const formData = new FormData();
         formData.append('video', recordedBlob);
         formData.append('timestamps', JSON.stringify(timestamps));
+        formData.append('email', emailRecipient);
         axios.post(`${serverAddress}/processVideo/${idid}`, formData, {
             headers: {
                 'Content-Type': 'multipart/form-data',
