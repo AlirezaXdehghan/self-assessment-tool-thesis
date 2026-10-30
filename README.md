@@ -89,7 +89,8 @@ They were stripped on import from `SA-Back`, where they had been committed in pl
 
 This is an archived thesis: apart from the safety and portability changes listed below, the code is preserved as it was run.
 
-- **`backend/eval_answers.py:49` — corrected after the thesis, not in it.** The original line read `cosineSim(noent_perfect, noent_perfect)`, comparing the perfect answer with itself, which pinned `sim_score_good` at `1.0` and made the `0.8` threshold mean "0.8 absolute cosine similarity" rather than "80% of a good answer". It now reads `cosineSim(noent_ref, noent_perfect)`. **Any similarity number reported in the thesis comes from the original line, so this code no longer reproduces those results exactly** — the fix makes it correct going forward, not retroactively right.
+- **`backend/eval_answers.py:49` — the code did not implement the method in §3.2.** Equations 3.6–3.7 make the pass condition *relative*: a student must reach `(1 − E/100)` of `PES`/`PSS`, the scores obtained by the paraphrased answer. The code computed `PSS` as `cosineSim(noent_perfect, noent_perfect)` — the perfect answer against itself — which is always `1.0`, so the semantic test collapsed to a fixed `0.8`. It now reads `cosineSim(noent_ref, noent_perfect)`. Per-answer similarity scores are unaffected; the pass/fail classification is, and with it any figure derived from it, such as the accuracy and F1 in Table 5.3.
+- **Equation 3.7, p. 17, is printed with a typo.** It reads `Sign(SSS · (100 − E) − SSS)`, with `SSS` on both sides, which passes for any positive score. It should read `Sign(SSS · (100 − E) − PSS)` — equation 3.6 has the same shape with `SES`/`PES`, and `PSS` is defined two paragraphs earlier for exactly this role.
 - **No automated tests.** The system was validated by using it, plus the experiments in `experiments/`.
 
 ## Changes made on import
