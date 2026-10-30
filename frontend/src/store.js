@@ -6,7 +6,7 @@ const initialState = {
     globalParameter: "initial_value",
     generatedUuid: "default-uuid",
     globalView: "creator",
-    backendServer: "https://loop.ai",
+    backendServer: process.env.REACT_APP_BACKEND_URL || "https://loop.ai",
     emailAddress: "alireza@loop.ai"
 };
 
