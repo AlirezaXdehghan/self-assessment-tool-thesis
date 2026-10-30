@@ -85,11 +85,11 @@ None are in this repository. Three values are needed at runtime, all read from t
 
 They were stripped on import from `SA-Back`, where they had been committed in plaintext. **Treat all three as compromised and rotate them** — removing them here does not remove them from that repository's history.
 
-## Known defects
+## Known defects, left as they are
 
-This is an archived thesis: apart from the safety and portability changes listed below, the code is preserved as it was run.
+This is an archived thesis: the code is preserved as it ran. Both defects below are recorded here rather than repaired, so that the repository still reproduces what the thesis measured.
 
-- **`backend/eval_answers.py:49` — the code did not implement the method in §3.2.** Equations 3.6–3.7 make the pass condition *relative*: a student must reach `(1 − E/100)` of `PES`/`PSS`, the scores obtained by the paraphrased answer. The code computed `PSS` as `cosineSim(noent_perfect, noent_perfect)` — the perfect answer against itself — which is always `1.0`, so the semantic test collapsed to a fixed `0.8`. It now reads `cosineSim(noent_ref, noent_perfect)`. Per-answer similarity scores are unaffected; the pass/fail classification is, and with it any figure derived from it, such as the accuracy and F1 in Table 5.3.
+- **`backend/eval_answers.py:49`** — `cosineSim(noent_perfect, noent_perfect)` compares the perfect answer with itself, so `sim_score_good` is always `1.0` and the semantic gate collapses to a fixed `0.8` instead of the relative test described in §3.2. Recorded, deliberately not fixed.
 - **Equation 3.7, p. 17, is printed with a typo.** It reads `Sign(SSS · (100 − E) − SSS)`, with `SSS` on both sides, which passes for any positive score. It should read `Sign(SSS · (100 − E) − PSS)` — equation 3.6 has the same shape with `SES`/`PES`, and `PSS` is defined two paragraphs earlier for exactly this role.
 - **No automated tests.** The system was validated by using it, plus the experiments in `experiments/`.
 
