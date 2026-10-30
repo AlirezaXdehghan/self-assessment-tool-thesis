@@ -1,19 +1,14 @@
 # Self Assessment Tool for Medical Exam Candidates
 
 **MSc thesis** — University of Padova, Department of Mathematics, Academic Year 2023/24
-Candidate **Alireza Dehghan** · Supervisor **Prof. Massimo Marchiori** · Co-supervisor **Davide Baldelli** (LoopAI)
+Candidate **Alireza Dehghan** · Supervisor **Prof. Massimo Marchiori** · Co-supervisor **Davide Baldelli**
 
-📄 **[Read the thesis (61 pages)](docs/thesis/dehghan-2024-self-assessment-tool.pdf)**
-
----
-
-## What it is
+📄 **[The thesis](docs/thesis/dehghan-2024-self-assessment-tool.pdf)**
 
 An automated oral examination for medical students. It reads a textbook, writes exam questions from it, records the candidate answering them aloud, and scores each answer on three axes — content, prosody, facial expression — approaching the way a human examiner reads both knowledge and confidence.
 
-> The tool has two main components: the natural language processing and the multimodal analysis components. The NLP component is responsible for question generation from provided textbooks, speech-to-text for oral responses, and further evaluation of such responses. This is achieved through the use of advanced language models (LLMs) in ensuring parsing and generation of accurate medical-related content. This evaluation is enriched with multimodal analysis that will treat prosodic features and facial expressions to identify student confidence and uncertainty to resemble an evaluation as of human examiners.
->
-> — Abstract
+The tool has two main components: the natural language processing and the multimodal analysis components. The NLP component is responsible for question generation from provided textbooks, speech-to-text for oral responses, and further evaluation of such responses. This is achieved through the use of advanced language models (LLMs) in ensuring parsing and generation of accurate medical-related content. This evaluation is enriched with multimodal analysis that will treat prosodic features and facial expressions to identify student confidence and uncertainty to resemble an evaluation as of human examiners.
+
 
 ## How a session runs
 
@@ -28,18 +23,14 @@ An automated oral examination for medical students. It reads a textbook, writes 
 
 ## Layout
 
-| Path | What | Where it came from |
-|------|------|--------------------|
-| `frontend/` | React 18 app — CRA, Redux, `react-webcam` | This repository's own history, formerly `SATUI` |
-| `backend/` | FastAPI service — ingestion, generation, transcription, scoring | Snapshot of `SA-Back` @ `15f5606` |
-| `experiments/` | Answer-scoring notebook, used while developing the evaluation | Snapshot of `sentence-evaluation` @ `c366a94` |
-| `docs/thesis/` | The thesis | — |
+| Path | What |
+|------|------|
+| `frontend/` | React — CRA, Redux, `react-webcam` |
+| `backend/` | FastAPI service — ingestion, generation, transcription, scoring |
+| `experiments/` | Answer-scoring notebook, used while developing the evaluation |
+| `docs/thesis/` | The thesis |
 
 The trained assets travel with the backend: `bestmo2.keras` (facial expression) and `scaler-prosody.joblib` (prosody calibration).
-
-`package.json` also declares `face-api.js` and `react-pdf`, neither of which is imported anywhere. Facial analysis runs on the backend (`facial_evaluator.py`), and the browser never renders the PDF: `GET /showSection/{uuid}/{n}` returns the extracted section text, which the app simply displays. Both packages are left in place because the lockfile was generated with them.
-
-**Two relatives are deliberately not merged.** `backself` is the predecessor of `SA-Back` — `abbs.csv` and `findPage.py` are byte-identical, the rest was superseded — so importing it would add nothing but a second copy. `PDFdigester` is a standalone tool used well beyond this thesis and continues on its own; the version this work used is pinned at `1247dcf`.
 
 ## Running it
 
@@ -84,20 +75,3 @@ None are in this repository. Three values are needed at runtime, all read from t
 | `HF_TOKEN` | Hugging Face access token for the gated checkpoints |
 
 They were stripped on import from `SA-Back`, where they had been committed in plaintext. **Treat all three as compromised and rotate them** — removing them here does not remove them from that repository's history.
-
-## Known defects, left as they are
-
-This is an archived thesis: the code is preserved as it ran. Both defects below are recorded here rather than repaired, so that the repository still reproduces what the thesis measured.
-
-- **`backend/eval_answers.py:49`** — `cosineSim(noent_perfect, noent_perfect)` compares the perfect answer with itself, so `sim_score_good` is always `1.0` and the semantic gate collapses to a fixed `0.8` instead of the relative test described in §3.2. Recorded, deliberately not fixed.
-- **Equation 3.7, p. 17, is printed with a typo.** It reads `Sign(SSS · (100 − E) − SSS)`, with `SSS` on both sides, which passes for any positive score. It should read `Sign(SSS · (100 − E) − PSS)` — equation 3.6 has the same shape with `SES`/`PES`, and `PSS` is defined two paragraphs earlier for exactly this role.
-- **No automated tests.** The system was validated by using it, plus the experiments in `experiments/`.
-
-## Changes made on import
-
-Only what was needed to make the code runnable and safe, listed so the record stays honest:
-
-- Three credentials replaced with environment lookups (`app.py`, `emailScore.py`, `generate_openelm.py`, `model_pipeline.py`).
-- The hardcoded home directory in `app.py` and the hardcoded GPU index replaced with environment defaults.
-- The frontend's hardcoded backend address made overridable via `REACT_APP_BACKEND_URL`.
-- `.DS_Store` and `.idea/` not carried over.
