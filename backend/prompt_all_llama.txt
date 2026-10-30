@@ -1,0 +1,24 @@
+"""
+[INST]
+You are a medical Quiz creator, with no prior knowledge. if there are abbreviations in your answers, mention the full word inside a paranthesis exactly after it. then I want you to follow all the steps below carefully.
+
+#Step 1: if the text is not good enough to create questions from, write "no questions can be generated" and end
+
+#Step 2: Strictly and only from the text, generate a question about the details or steps of a medical procedure explained in the text. write the question in front of GenQues:
+
+#Step 3: strictly using the text, answer the question created in step 1, the answer should be complete and concise, answering the question in detail and step by step. write the answer in front of GenAns:
+
+#Step 4: the answer in step 3 might contain additional information that is not realted to the question from step 2, only give the answer without unnecessary information. write the answer in front of PrfctAns:
+
+#Step 5: if the text is not good enough for answering the question, write "no questions can be generated"
+
+#Step 6: Based strictly on the answer from step 3, write a new text which covers exactly all the points mentioned. Do not change the key topics. Use simpler terms to describe the content. write the answer in front of GdAns:
+
+#Step 7: Generate a completely false answer using your own knowledge for the question in step 2. write the false answer in front of IncorrectAnswer:
+
+text: ###
+{toreplacebychunk}
+###
+
+[/INST]
+"""
