@@ -1,70 +1,102 @@
-# Getting Started with Create React App
+# Self Assessment Tool for Medical Exam Candidates
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+**MSc thesis** — University of Padova, Department of Mathematics, Academic Year 2023/24
+Candidate **Alireza Dehghan** · Supervisor **Prof. Massimo Marchiori** · Co-supervisor **Davide Baldelli** (LoopAI)
 
-## Available Scripts
+📄 **[Read the thesis (61 pages)](docs/thesis/dehghan-2024-self-assessment-tool.pdf)**
 
-In the project directory, you can run:
+---
 
-### `npm start`
+## What it is
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+An automated oral examination for medical students. It reads a textbook, writes exam questions from it, records the candidate answering them aloud, and scores each answer on three axes — content, prosody, facial expression — approaching the way a human examiner reads both knowledge and confidence.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+> The tool has two main components: the natural language processing and the multimodal analysis components. The NLP component is responsible for question generation from provided textbooks, speech-to-text for oral responses, and further evaluation of such responses. This is achieved through the use of advanced language models (LLMs) in ensuring parsing and generation of accurate medical-related content. This evaluation is enriched with multimodal analysis that will treat prosodic features and facial expressions to identify student confidence and uncertainty to resemble an evaluation as of human examiners.
+>
+> — Abstract
 
-### `npm test`
+## How a session runs
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+| # | Step | Code |
+|---|------|------|
+| 1 | A textbook PDF is uploaded, digested into sections, located by page and cut into overlapping chunks | `backend/digest.py`, `backend/findPage.py`, `POST /uploadPDF` |
+| 2 | Questions are generated from the material, each with a reference answer, a paraphrase and a perfect answer | `backend/generate_QApair.py`, `backend/model_pipeline.py`, `POST /createtheexam/{uuid}` |
+| 3 | The candidate sits the exam in the browser; each answer is recorded from the webcam | `frontend/src/components/exam.js`, `ExamCreator.js` |
+| 4 | Answers are transcribed with Whisper and scored against the expected answers, by sentence embeddings and entity overlap | `backend/eval_answers.py`, `backend/eval_question.py` |
+| 5 | Prosody and facial expression add uncertainty signals | `backend/auditory_evaluator.py`, `backend/facial_evaluator.py` |
+| 6 | Results are served, and optionally emailed to the candidate | `GET /EvaluateExam/{uuid}`, `backend/emailScore.py` |
 
-### `npm run build`
+## Layout
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+| Path | What | Where it came from |
+|------|------|--------------------|
+| `frontend/` | React 18 app — CRA, Redux, `react-webcam` | This repository's own history, formerly `SATUI` |
+| `backend/` | FastAPI service — ingestion, generation, transcription, scoring | Snapshot of `SA-Back` @ `15f5606` |
+| `experiments/` | Answer-scoring notebook, used while developing the evaluation | Snapshot of `sentence-evaluation` @ `c366a94` |
+| `docs/thesis/` | The thesis | — |
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+The trained assets travel with the backend: `bestmo2.keras` (facial expression) and `scaler-prosody.joblib` (prosody calibration).
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+`package.json` also declares `face-api.js` and `react-pdf`, neither of which is imported anywhere. Facial analysis runs on the backend (`facial_evaluator.py`), and the browser never renders the PDF: `GET /showSection/{uuid}/{n}` returns the extracted section text, which the app simply displays. Both packages are left in place because the lockfile was generated with them.
 
-### `npm run eject`
+**Two relatives are deliberately not merged.** `backself` is the predecessor of `SA-Back` — `abbs.csv` and `findPage.py` are byte-identical, the rest was superseded — so importing it would add nothing but a second copy. `PDFdigester` is a standalone tool used well beyond this thesis and continues on its own; the version this work used is pinned at `1247dcf`.
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+## Running it
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+**Backend** — Python, with the versions in `req.txt`. A CUDA GPU is effectively required: Whisper, `sentence-transformers` and the quantised LLMs all assume one.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+```bash
+cd backend
+python -m venv .venv
+.venv\Scripts\activate            # Windows;  source .venv/bin/activate elsewhere
+pip install -r req.txt
+```
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+Then set the environment variables from `backend/.env.example` and start it:
 
-## Learn More
+```bash
+uvicorn app:app --port 8000
+```
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+Uploads, transcripts and model downloads go to `backend/WorkDir`, unless `WORK_DIRECTORY` points somewhere else. `CUDA_VISIBLE_DEVICES` selects the GPU and defaults to `0`.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+**Frontend:**
 
-### Code Splitting
+```bash
+cd frontend
+npm install
+npm start
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+The app reads its backend address from `REACT_APP_BACKEND_URL`; without it, it falls back to the original deployment address:
 
-### Analyzing the Bundle Size
+```bash
+REACT_APP_BACKEND_URL=http://localhost:8000 npm start
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+## Credentials
 
-### Making a Progressive Web App
+None are in this repository. Three values are needed at runtime, all read from the environment:
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+| Variable | Used for |
+|---|---|
+| `PROTON_USER`, `PROTON_PASSWORD` | The mailbox that emails results to candidates |
+| `HF_TOKEN` | Hugging Face access token for the gated checkpoints |
 
-### Advanced Configuration
+They were stripped on import from `SA-Back`, where they had been committed in plaintext. **Treat all three as compromised and rotate them** — removing them here does not remove them from that repository's history.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+## Known defects, kept on purpose
 
-### Deployment
+This is an archived thesis: the code is preserved as it was run, not repaired. Two things are worth knowing before reading any number it produces.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+- **`backend/eval_answers.py:49`** — `cosineSim(noent_perfect, noent_perfect)` compares the perfect answer with itself, so `sim_score_good` is always `1.0`. The `0.8` threshold on the next line therefore means "the candidate reached 0.8 cosine similarity", not "80% of a good answer". The intended expression is `cosineSim(noent_ref, noent_perfect)`.
+- **No automated tests.** The system was validated by using it, plus the experiments in `experiments/`.
 
-### `npm run build` fails to minify
+## Changes made on import
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+Only what was needed to make the code runnable and safe, listed so the record stays honest:
+
+- Three credentials replaced with environment lookups (`app.py`, `emailScore.py`, `generate_openelm.py`, `model_pipeline.py`).
+- The hardcoded home directory in `app.py` and the hardcoded GPU index replaced with environment defaults.
+- The frontend's hardcoded backend address made overridable via `REACT_APP_BACKEND_URL`.
+- `.DS_Store` and `.idea/` not carried over.
