@@ -58,7 +58,7 @@ Then set the environment variables from `backend/.env.example` and start it:
 uvicorn app:app --port 8000
 ```
 
-Uploads, transcripts and model downloads go to `backend/WorkDir`, unless `WORK_DIRECTORY` points somewhere else. `CUDA_VISIBLE_DEVICES` selects the GPU and defaults to `0`.
+Uploads, transcripts and the Whisper download go to `backend/WorkDir`, unless `WORK_DIRECTORY` points somewhere else. Hugging Face weights go to `HF_HOME`, defaulting to `~/.cache/huggingface`. `CUDA_VISIBLE_DEVICES` selects the GPU and defaults to `0`.
 
 **Frontend:**
 
