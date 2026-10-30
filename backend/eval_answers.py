@@ -46,7 +46,7 @@ def eval_answers(video_path, questions_path):
         ent_score_good = max(compare_entities(noent_ref,noent_good), compare_entities(noent_perfect,noent_good))
 
         sim_score_student = max(cosineSim(noent_ref, noent_student),cosineSim(noent_good,noent_student),cosineSim(noent_perfect,noent_student))
-        sim_score_good = max(cosineSim(noent_ref, noent_good),cosineSim(noent_perfect,noent_perfect))
+        sim_score_good = max(cosineSim(noent_ref, noent_good),cosineSim(noent_ref,noent_perfect))
 
         vid_score = face_eval(video) #get facial uncertainty
         aud_score = prosodic_eval(video) #get auditory uncertainty

@@ -85,11 +85,11 @@ None are in this repository. Three values are needed at runtime, all read from t
 
 They were stripped on import from `SA-Back`, where they had been committed in plaintext. **Treat all three as compromised and rotate them** — removing them here does not remove them from that repository's history.
 
-## Known defects, kept on purpose
+## Known defects
 
-This is an archived thesis: the code is preserved as it was run, not repaired. Two things are worth knowing before reading any number it produces.
+This is an archived thesis: apart from the safety and portability changes listed below, the code is preserved as it was run.
 
-- **`backend/eval_answers.py:49`** — `cosineSim(noent_perfect, noent_perfect)` compares the perfect answer with itself, so `sim_score_good` is always `1.0`. The `0.8` threshold on the next line therefore means "the candidate reached 0.8 cosine similarity", not "80% of a good answer". The intended expression is `cosineSim(noent_ref, noent_perfect)`.
+- **`backend/eval_answers.py:49` — corrected after the thesis, not in it.** The original line read `cosineSim(noent_perfect, noent_perfect)`, comparing the perfect answer with itself, which pinned `sim_score_good` at `1.0` and made the `0.8` threshold mean "0.8 absolute cosine similarity" rather than "80% of a good answer". It now reads `cosineSim(noent_ref, noent_perfect)`. **Any similarity number reported in the thesis comes from the original line, so this code no longer reproduces those results exactly** — the fix makes it correct going forward, not retroactively right.
 - **No automated tests.** The system was validated by using it, plus the experiments in `experiments/`.
 
 ## Changes made on import
